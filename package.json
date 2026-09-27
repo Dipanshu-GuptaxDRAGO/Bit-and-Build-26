@@ -1,0 +1,21 @@
+{
+  "name": "web-shooter-unified",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "nitro dev",
+    "build": "npm --prefix frontend run build && nitro build",
+    "vercel-build": "npm run build",
+    "postinstall": "npm ci --prefix database && npm ci --prefix frontend",
+    "test": "npm --prefix database run db:test && npm --prefix database run api:test && npm --prefix database run dispatch:test && npm --prefix database run dispatch:recovery:test && npm --prefix backend/backend run test:race && npm --prefix backend/backend run test:lifecycle && npm --prefix frontend test"
+  },
+  "dependencies": {
+    "nitro": "^0.0.0",
+    "rollup": "^4.63.5",
+    "workflow": "^4.8.9"
+  }
+}

@@ -1,0 +1,25 @@
+FINAL matching reference, 2026-09-26
+
+Port logic from these exact files, preserving paths:
+lib/matching.js
+lib/dispatch.js
+lib/geo.js
+utils/mutex.js
+
+Verified: npm run test:race (5 scenarios), npm run test:lifecycle (2 scenarios).
+Source README.md contains the judges one-pager and integration notes.
+
+Severity boost alone cannot order competing incidents. Preserve priority admission:
+collect a batch, rank incidents by incidentPriority, then await each claim workflow.
+The reference setImmediate queue is single-process only; use a shared ordered worker
+if global priority across SQL workers is required. Existing claims are not preempted.
+
+Optional aging: pass { waitingBonusFn: waitingBonus } to dispatchMatch, or as the
+third matchAndClaim argument. Enable consistently for all requests and automatic
+retries if adopting service-wide. Pending incidents must be resubmitted by the service.
+The helper uses pending_since or reported_at; timeout resets pending_since here.
+No database/schema changes were made. Adapt synchronous store calls to await SQL,
+with conditional atomic claims and transactional assignment in the real backend.
+
+SHA256SUMS.txt verifies exact source copies. These files remain a reference/backup;
+they are not a replacement for the teammate's Postgres integration.
